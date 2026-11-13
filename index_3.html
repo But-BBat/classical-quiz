@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>클래식음악과 여행 듣기 대비</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: 프로그램 노트 같은 단일 컬럼. 상단 탭(퀴즈·판별표·비교·플레이리스트), 본문 최대 880px */
+:root{
+  --bg:#F3F4F8; --surface:#FFFFFF; --ink:#1B1E2E; --muted:#5B6078; --line:#DCDFE9;
+  --accent:#2C47A8; --accent-soft:#E6EAF8; --brass:#8A6410; --brass-soft:#F6EED9;
+  --ok:#1E7A4C; --ok-soft:#E1F2E8; --ng:#B3322B; --ng-soft:#F8E3E1;
+  --g-voice:#B2457A; --g-choir:#8A4FB5; --g-baroque:#7A5A2E; --g-orchB:#A06A12; --g-orchC:#2C6FB0; --g-chamber:#2E8A7A; --g-pfFast:#C2502E; --g-pfSlow:#4E5BC4; --g-verdi:#8E3B46; --g-strauss:#2F7D5B;
+  --f-display:"Hahmlet","Nanum Myeongjo",serif; --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11131B; --surface:#1A1D28; --ink:#E7E9F2; --muted:#9BA1B9; --line:#2D3142;
+  --accent:#93A6F2; --accent-soft:#232A45; --brass:#E2B95C; --brass-soft:#2E2817;
+  --ok:#6DD39C; --ok-soft:#173226; --ng:#F08A82; --ng-soft:#3A1E1C;
+  --g-voice:#E58BB5; --g-choir:#C49BEA; --g-baroque:#CFAE7E; --g-orchB:#E5B356; --g-orchC:#7FB3EA; --g-chamber:#6FD0BE; --g-pfFast:#F0916F; --g-pfSlow:#9AA5F2; --g-verdi:#E48A96; --g-strauss:#7FD3AC;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11131B; --surface:#1A1D28; --ink:#E7E9F2; --muted:#9BA1B9; --line:#2D3142;
+  --accent:#93A6F2; --accent-soft:#232A45; --brass:#E2B95C; --brass-soft:#2E2817;
+  --ok:#6DD39C; --ok-soft:#173226; --ng:#F08A82; --ng-soft:#3A1E1C;
+  --g-voice:#E58BB5; --g-choir:#C49BEA; --g-baroque:#CFAE7E; --g-orchB:#E5B356; --g-orchC:#7FB3EA; --g-chamber:#6FD0BE; --g-pfFast:#F0916F; --g-pfSlow:#9AA5F2; --g-verdi:#E48A96; --g-strauss:#7FD3AC;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+header h1{font-family:var(--f-display);font-weight:700;font-size:clamp(24px,4.5vw,34px);line-height:1.25;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:6px 0 0;font-size:14px}
+.staff{height:14px;margin:18px 0 0;background:repeating-linear-gradient(to bottom,var(--line) 0 1px,transparent 1px 3.5px)}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin:18px 0 22px;border-bottom:1px solid var(--line)}
+nav a{padding:10px 14px;text-decoration:none;color:var(--muted);font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+nav a[aria-current="page"]{color:var(--ink);border-color:var(--accent)}
+nav a:focus-visible,button:focus-visible,input:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+h2{font-family:var(--f-display);font-weight:700;font-size:21px;margin:0 0 10px;text-wrap:balance}
+h3{font-size:15px;margin:0 0 8px;font-weight:600}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+button,.btn{font:inherit;font-weight:500;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button:hover,.btn:hover{border-color:var(--accent)}
+.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.primary:hover{filter:brightness(1.08)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.settings{display:grid;gap:12px;margin-bottom:16px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13px;cursor:pointer;user-select:none;background:var(--surface)}
+.chip input{accent-color:var(--accent);margin:0}
+.chip.on{background:var(--accent-soft);border-color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0}
+.seg button.on{background:var(--accent);color:var(--surface)}
+.qhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.qnum{font-family:var(--f-display);font-size:30px;font-weight:700}
+.qnum span{font-size:15px;color:var(--muted);font-family:var(--f-body);font-weight:400}
+.cluebox{border-left:3px solid var(--line);padding:6px 0 6px 12px;margin:12px 0;color:var(--ink)}
+.answer{margin-top:14px;border-radius:10px;background:var(--brass-soft);padding:14px 16px}
+.answer .line{font-weight:600;font-size:16px;color:var(--ink)}
+.answer .en{font-size:13px;color:var(--muted);margin-top:2px}
+.answer .lbl{font-size:12px;letter-spacing:.06em;color:var(--brass);font-weight:600}
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:12px 0 0;font-size:14px}
+dl.facts dt{color:var(--muted)}
+dl.facts dd{margin:0}
+.warn{background:var(--ng-soft);border-radius:8px;padding:8px 12px;font-size:13.5px;margin-top:10px}
+.stats{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.stats b{color:var(--ink);font-variant-numeric:tabular-nums}
+.ok{color:var(--ok)} .ng{color:var(--ng)}
+.btn-ok{border-color:var(--ok);color:var(--ok)} .btn-ok:hover{background:var(--ok-soft)}
+.btn-ng{border-color:var(--ng);color:var(--ng)} .btn-ng:hover{background:var(--ng-soft)}
+textarea,input[type=text],input[type=search]{font:inherit;width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:var(--bg);color:var(--ink)}
+.gtag{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--gc)}
+.gtag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gc)}
+.group{margin:22px 0}
+.group > .ghead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.group > .ghead h3{margin:0;font-size:16px;color:var(--gc)}
+.item{border-top:1px solid var(--line);padding:12px 0;display:grid;grid-template-columns:44px 1fr;gap:4px 12px}
+.item .no{font-family:var(--f-mono);color:var(--muted);font-size:13px;padding-top:2px}
+.item .ans{font-weight:600}
+.item .meta{font-size:12.5px;color:var(--muted)}
+.item .clue{font-size:14px}
+.item .tip{font-size:13.5px;color:var(--muted)}
+.item .tip b{color:var(--ink);font-weight:500}
+.cmp{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))}
+.cmp table{width:100%;border-collapse:collapse;font-size:14px}
+.cmp td{border-top:1px solid var(--line);padding:7px 4px;vertical-align:top}
+.cmp td:last-child{white-space:nowrap;font-weight:600;text-align:right}
+.week{margin:18px 0}
+.week ol{margin:0;padding:0;list-style:none}
+.week li{border-top:1px solid var(--line);padding:9px 0;display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.week li a{color:var(--accent);font-weight:500;white-space:nowrap}
+.mono{font-family:var(--f-mono)}
+.pop{font-size:13.5px;color:var(--brass);margin-top:2px}
+.pop ul{margin:2px 0 0;padding-left:18px}
+.choices{margin-top:14px;display:grid;gap:10px}
+.cwh{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.chs{display:flex;flex-wrap:wrap;gap:6px}
+button.choice{padding:6px 11px;font-size:13.5px;border-radius:999px;font-weight:400}
+button.choice.sel{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+button.choice.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:600}
+button.choice.wrong{background:var(--ng-soft);border-color:var(--ng);color:var(--ng);text-decoration:line-through}
+button.choice:disabled{cursor:default;opacity:1}
+button:disabled{opacity:.5;cursor:default}
+.verdict{margin-top:12px;font-weight:600;border-radius:8px;padding:8px 12px}
+.ok-v{background:var(--ok-soft);color:var(--ok)} .ng-v{background:var(--ng-soft);color:var(--ng)}
+.note{font-size:13.5px;color:var(--muted);margin:8px 0 0}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.answer{animation:pop .18s ease-out}@keyframes pop{from{transform:translateY(4px);opacity:.6}to{transform:none;opacity:1}}}
+body{margin:0}
+[hidden]{display:none!important}
+.stage{margin-bottom:16px;padding:0;overflow:hidden}
+.screen{position:relative;height:150px;background:#000;transition:height .25s ease}
+.screen.open{height:auto;aspect-ratio:16/9}
+.screen > iframe,#yt{position:absolute;inset:0;width:100%;height:100%;border:0}
+.cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--ink);color:var(--surface);text-align:center;padding:12px}
+.cover .big{font-family:var(--f-display);font-size:22px;font-weight:700}
+.eq{display:flex;gap:4px;align-items:flex-end;height:28px}
+.eq span{width:6px;height:6px;background:var(--brass);border-radius:2px}
+.playing .eq span{animation:eq 1s ease-in-out infinite}
+.eq span:nth-child(2){animation-delay:.15s}.eq span:nth-child(3){animation-delay:.3s}.eq span:nth-child(4){animation-delay:.45s}.eq span:nth-child(5){animation-delay:.6s}
+@keyframes eq{0%,100%{height:6px}50%{height:28px}}
+@media (prefers-reduced-motion:reduce){.playing .eq span{animation:none;height:16px}}
+.ctrls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 14px}
+.bar{flex:1 1 140px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;min-width:100px}
+.bar > div{height:100%;width:0;background:var(--accent)}
+select{font:inherit;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);padding:4px 6px}
+.ctrls label{display:inline-flex;gap:6px;align-items:center}
+.ctrls input[type=range]{width:90px;accent-color:var(--accent)}
+.perr{margin:0 14px 12px}
+.filewarn{background:var(--ng-soft);border-radius:10px;padding:12px 14px;margin:0 0 16px;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <h1>클래식음악과 여행 · 기말 듣기 대비</h1>
+  <p>교수님 음원 50곡(1~7, 9~11주차)을 이 페이지 안에서 재생합니다. 시험에도 같은 영상이 쓰여요. 곡 정보는 정답을 볼 때까지 가려져요.</p>
+  <div class="staff" aria-hidden="true"></div>
+</header>
+<nav aria-label="보기">
+  <a href="#quiz">듣기 퀴즈</a><a href="#sheet">판별표</a><a href="#compare">헷갈리는 곡 비교</a><a href="#playlist">플레이리스트</a>
+</nav>
+
+<section id="v-quiz">
+  <div class="panel settings">
+    <div class="row"><span class="small muted" style="min-width:52px">범위</span><div class="row" id="weeks"></div></div>
+    <div class="row"><span class="small muted" style="min-width:52px">방식</span>
+      <div class="seg" role="group" aria-label="퀴즈 방식"><button id="m-listen" type="button">음원 듣고 맞히기</button><button id="m-clue" type="button">단서 읽고 맞히기</button></div>
+      <label class="chip" id="wrongchip"><input type="checkbox" id="onlywrong"> 틀린 곡만</label>
+      <button type="button" id="reshuffle">새로 섞기</button>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+  <div class="filewarn" id="filewarn" hidden>이 파일을 컴퓨터에서 바로 열면 유튜브가 재생을 막습니다(오류 153). 웹 주소(https://…)로 올린 페이지에서 열어주세요.</div>
+  <div class="panel stage" id="stage">
+    <div class="screen" id="screen"><div id="yt"></div>
+      <div class="cover" id="cover"><div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><div class="big" id="cvbig">준비 중</div><div class="small" id="cvsub">플레이어를 불러오는 중입니다</div></div>
+    </div>
+    <div class="ctrls">
+      <button type="button" class="primary" id="pp">▶ 재생</button>
+      <button type="button" id="rw">처음부터</button>
+      <button type="button" id="b10">−10초</button>
+      <button type="button" id="f10">+10초</button>
+      <div class="bar" aria-hidden="true"><div id="barfill"></div></div>
+      <span class="mono small" id="tm">0:00</span>
+    </div>
+    <div class="ctrls" style="padding-top:0">
+      <label class="small muted">재생 제한 <select id="lim"><option value="60">1분</option><option value="90">1분 30초</option><option value="120" selected>2분</option><option value="0">없음</option></select></label>
+      <label class="small muted">음량 <input type="range" id="vol" min="0" max="100" value="80"></label>
+      <label class="chip small"><input type="checkbox" id="autonext" checked> 다음 문제 자동 재생</label>
+      <span class="small muted">스페이스바: 재생/정지</span>
+    </div>
+    <div class="warn perr" id="perr" hidden></div>
+  </div>
+  <div class="panel" id="card"></div>
+  <p class="note">곡 제목이 보이지 않도록 브라우저의 미디어 컨트롤(주소창 옆 음표 아이콘)이나 윈도우 음량 팝업은 보지 마세요.</p>
+</section>
+
+<section id="v-sheet" hidden>
+  <h2>판별표</h2>
+  <p class="muted small">시험장 순서: ① 처음 들리는 소리(편성)로 그룹 찾기 → ② 그룹 안에서 도입부 단서 비교 → ③ 답안 줄을 그대로 옮겨 쓰기.</p>
+  <input type="search" id="q" placeholder="곡명·작곡가·단서 검색 (예: 트럼펫, 단조, 첼로)" aria-label="판별표 검색">
+  <div id="sheet"></div>
+</section>
+
+<section id="v-compare" hidden>
+  <h2>헷갈리는 곡 비교</h2>
+  <p class="muted small">왼쪽 특징이 들리면 오른쪽 곡. 번호는 판별표 번호.</p>
+  <div class="cmp" id="cmp"></div>
+</section>
+
+<section id="v-playlist" hidden>
+  <h2>주차별 플레이리스트</h2>
+  <p class="muted small">교수님이 주신 음원 그대로입니다. <a class="mono" href="https://www.youtube.com/playlist?list=PLEjBjURQGiZI" target="_blank" rel="noopener">전체 재생목록 열기 ↗</a></p>
+  <div id="pl"></div>
+</section>
+</div>
+
+<script>
+const D = {"items": [{"n": 1, "w": 1, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "토마스 알비노니", "compEn": "Tomaso Albinoni", "title": "현과 오르간을 위한 아다지오 사단조, T.Mi 26", "en": "Adagio in G Minor for Strings and Organ, T.Mi 26", "g": "orchB", "v": "u99f9RAvwu4", "rec": "", "clue": "오르간 화음 + 저음 현의 '뚝… 뚝…' 걷는 베이스로 아주 느리게 시작 → 바이올린이 비통하고 긴 선율", "tip": "바로크 합주 중 가장 느리고 슬픔(장송곡 같음). 같은 느린 현악인 'G선상의 아리아'는 장조·평온", "warn": "", "ck": "알비노니", "short": "알비노니 아다지오", "pop": [], "orig": ""}, {"n": 2, "w": 1, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "안토니오 루치오 비발디", "compEn": "Antonio Lucio Vivaldi", "title": "바이올린 협주곡 제1번 마장조, 작품번호 8, RV 269 <사계> 중 '봄' 1악장", "en": "Violin Concerto No. 1 in E Major, Op. 8, RV 269 \"Spring\" - I. Allegro", "g": "orchB", "v": "8cTD9amqphM", "rec": "펄만", "clue": "밝은 장조 합주가 짧은 경쾌한 악구를 크게 → 메아리처럼 작게 반복 → 솔로 바이올린들이 트릴로 새소리 흉내", "tip": "바로크 합주 중 유일하게 밝고 산뜻한 '봄' 분위기 + 새소리", "warn": "", "ck": "비발디", "short": "비발디 봄 1악장", "pop": ["이채연 'Intro: Shangri-La' — 비발디 '봄' 샘플링 (몇 악장인지 출처에 표기 없음)"], "orig": ""}, {"n": 3, "w": 1, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "안토니오 루치오 비발디", "compEn": "Antonio Lucio Vivaldi", "title": "바이올린 협주곡 제2번 사단조, 작품번호 8, RV 315 <사계> 중 '여름' 3악장", "en": "Violin Concerto No. 2 in G Minor, Op. 8, RV 315 \"Summer\" - III. Presto", "g": "orchB", "v": "124NoPUBDvA", "rec": "안네-조피 무터", "clue": "첫 음부터 폭풍: 현 전체가 같은 음을 격렬하게 연타(트레몰로) + 번개처럼 내리꽂는 하강 음계, 매우 빠른 단조", "tip": "같은 사단조 비발디 '라 스트라바간자'보다 훨씬 격렬하고 2분대로 짧음", "warn": "", "ck": "비발디", "short": "비발디 여름 3악장", "pop": [], "orig": ""}, {"n": 4, "w": 1, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "안토니오 루치오 비발디", "compEn": "Antonio Lucio Vivaldi", "title": "바이올린 협주곡 제6번 사단조, 작품번호 4, RV 316a <라 스트라바간자> 1악장", "en": "Violin Concerto No. 6 in G Minor, Op. 4, RV 316a \"La Stravaganza\" - I. Allegro", "g": "orchB", "v": "W8Vjcd5hyl0", "rec": "", "clue": "빠른 단조 협주곡. 합주(투티)와 솔로 바이올린의 빠른 패시지가 번갈아 나오지만 폭풍 같은 연타는 없음", "tip": "'여름' 3악장과 혼동 주의 → 덜 격렬하고 정돈된 느낌이면 스트라바간자", "warn": "", "ck": "비발디", "short": "라 스트라바간자", "pop": [], "orig": ""}, {"n": 5, "w": 1, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "안토니오 루치오 비발디", "compEn": "Antonio Lucio Vivaldi", "title": "칸타타 <그만두어라, 이제는 끝났다>, RV 684 '왜 나의 슬픔 외에는 원치 않는가'", "en": "Cantata \"Cessate, omai cessate\", RV 684 - 'Ah ch'infelice sempre'", "g": "voice", "v": "pl-k7hNY84g", "rec": "", "clue": "현악 반주 위 낮은 음역 독창(알토/카운터테너), 이탈리아어, 느리고 애절한 탄식", "tip": "이탈리아어 바로크 독창은 2곡: 느리고 슬프면 비발디 칸타타 / 밝고 기쁘면 헨델 '로델린다'(조수미)", "warn": "", "ck": "비발디", "short": "비발디 칸타타 RV 684", "pop": [], "orig": ""}, {"n": 6, "w": 2, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "요한 제바스티안 바흐", "compEn": "Johann Sebastian Bach", "title": "평균율 클라비어 곡집 제1권 제1번 다장조, BWV 846, 제1곡 전주곡", "en": "The Well-Tempered Clavier, Book 1, BWV 846 - No. 1 Prelude", "g": "baroque", "v": "xCqWH9bKzQE", "rec": "하프시코드", "clue": "하프시코드(챙챙거리는 금속성 건반) 단독. 멜로디 없이 같은 모양의 분산화음 패턴만 마디마다 반복, 잔잔한 장조", "tip": "건반 소리가 '하프시코드'면 이 곡. 영상 후반은 푸가(전주곡 약 2분)", "warn": "", "ck": "바흐", "short": "평균율 1번 전주곡", "pop": [], "orig": ""}, {"n": 7, "w": 2, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "요한 제바스티안 바흐", "compEn": "Johann Sebastian Bach", "title": "토카타와 푸가 라단조, BWV 565, 토카타 (오르간 곡)", "en": "Toccata and Fugue in D Minor, BWV 565 - Toccata (for Organ)", "g": "baroque", "v": "pqBV40G4wDU", "rec": "발햐", "clue": "파이프오르간 단독. ⚠ 링크 음원은 '푸가' 부분: 한 성부가 빠른 음형의 주제를 혼자 시작 → 다른 성부가 차례로 겹쳐 들어옴. (원래 토카타 도입: '띠로리~' 장식음 + 하강 음계 + 깊은 저음 화음)", "tip": "오르간 소리 = 이 곡뿐 (알비노니는 오르간이 반주일 뿐, 현악 선율이 주인공)", "warn": "시험 음원도 이 링크(푸가 부분)라서 유명한 '띠로리~' 토카타 도입부는 안 나와요. 오르간 소리면 이 곡", "ck": "바흐", "short": "토카타와 푸가", "pop": ["미야오(MIYAW) '띠로리'(2026) — 토카타 샘플링. 예능 충격 효과음 '띠로리~'가 바로 토카타 도입부", "주의: 교수님 링크는 푸가 부분이라 '띠로리' 도입부가 안 나옴", "NCT U 'That's Not Fair'는 다른 바흐 푸가(BWV 578) 샘플링이라 이 곡과 다름"], "orig": ""}, {"n": 8, "w": 2, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "요한 제바스티안 바흐", "compEn": "Johann Sebastian Bach", "title": "칸타타 제147번, BWV 147, 제10곡 예수, 인류의 소망과 기쁨", "en": "Cantata No. 147, BWV 147 - No. 10 \"Jesu, Joy of Man's Desiring\"", "g": "pfSlow", "v": "BcOyojBU3hs", "rec": "리파티, 피아노 편곡", "clue": "⚠ 링크 음원은 피아노 독주 편곡. '따라라 따라라' 셋잇단이 물 흐르듯 쉬지 않고 이어지고, 그 사이로 찬송가 같은 코랄 선율이 굵게 등장. 장조·평온", "tip": "느린 피아노 중 셋잇단 흐름 + 찬송가 선율 + 바로크풍 → 이 곡. (원곡은 합창+오케스트라)", "warn": "시험 음원도 이 피아노 독주 편곡 버전이에요 (원곡은 합창)", "ck": "바흐", "short": "예수, 인류의 소망과 기쁨", "pop": [], "orig": ""}, {"n": 9, "w": 2, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "요한 제바스티안 바흐", "compEn": "Johann Sebastian Bach", "title": "Air (G선상의 아리아) / 관현악 모음곡 3번, 2악장, 라장조, BWV 1068", "en": "'Air on the G String' from Orchestral Suite No. 3 in D Major, BWV 1068", "g": "orchB", "v": "rrVDATvUitA", "rec": "", "clue": "현악 합주. 첼로·베이스가 '둥 둥 둥' 걷는 옥타브 베이스, 바이올린은 긴 지속음에서 출발하는 매우 느리고 평온한 선율", "tip": "느린 현악인데 장조·평온 → 에어 / 단조·비통 → 알비노니", "warn": "", "ck": "바흐", "short": "G선상의 아리아", "pop": ["레드벨벳 'Feel My Rhythm'(2022) — 이 곡 선율을 그대로 사용"], "orig": ""}, {"n": 10, "w": 2, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "요한 제바스티안 바흐", "compEn": "Johann Sebastian Bach", "title": "골드베르크 변주곡, BWV 988, 제1변주 (한 대의 건반을 위한 곡)", "en": "Goldberg Variations, BWV 988 - Variation No. 1", "g": "pfSlow", "v": "55hk75OgWDg", "rec": "랑랑, 피아노", "clue": "⚠ 링크 음원은 제1변주가 아닌 '아리아'(주제): 피아노 단독, 느린 3박자, 트릴·꾸밈음이 많은 섬세하고 조용한 장조 선율", "tip": "느린 피아노 중 꾸밈음 많은 바로크풍 3박 → 이 곡", "warn": "시험 음원도 이 '아리아'예요 (목록의 '제1변주'가 아님)", "ck": "바흐", "short": "골드베르크 변주곡", "pop": [], "orig": ""}, {"n": 11, "w": 3, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "게오르크 프리드리히 헨델", "compEn": "George Frideric Handel", "title": "오페라 <로드리고> 모음곡 HWV 5 – 서곡", "en": "Rodrigo Suite, HWV 5 – Overture", "g": "orchB", "v": "3N3mJRbA3So", "rec": "", "clue": "바로크 현악 합주(+오보에). '따—안 따' 점음표 리듬의 장중하고 위엄 있는 도입 → 이후 빠른 부분", "tip": "왕이 입장하는 듯한 점음표 리듬 = 프랑스풍 서곡. 금관 팡파르가 두드러지면 '혼파이프'", "warn": "", "ck": "헨델", "short": "로드리고 서곡", "pop": [], "orig": ""}, {"n": 12, "w": 3, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "게오르크 프리드리히 헨델", "compEn": "George Frideric Handel", "title": "앤 여왕의 탄생일을 위한 송가 HWV 74 - '신성한 빛의 영원한 원천이여'", "en": "Ode for the Birthday of Queen Anne, HWV 74 – 'Eternal Source of Light Divine'", "g": "voice", "v": "vsCrBgxnywo", "rec": "소년 소프라노(12세)", "clue": "느린 현악 위로 맑은 소년 목소리가 'E-ter—nal' 첫 음을 아주 길게 끈다 → 솔로 트럼펫이 같은 긴 음으로 응답. 영어", "tip": "독창 + 트럼펫 = 이 곡뿐. 영어 독창도 이 곡뿐", "warn": "", "ck": "헨델", "short": "앤 여왕 송가", "pop": [], "orig": ""}, {"n": 13, "w": 3, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "게오르크 프리드리히 헨델", "compEn": "George Frideric Handel", "title": "<수상 음악> 모음곡 제2번 D장조 HWV 349 - '알라 혼파이프'", "en": "Water Music, Suite No. 2 in D Major, HWV 349 – 'Alla Hornpipe'", "g": "orchB", "v": "1h4mAceHmrI", "rec": "", "clue": "트럼펫·호른·현이 함께하는 축제풍 3박자 춤곡, 당김음 리듬, 금관이 번쩍이는 밝은 장조", "tip": "노래 없이 금관 팡파르 3박 → 혼파이프 / 합창이면 할렐루야 / 고전풍 솔로 트럼펫이면 하이든", "warn": "", "ck": "헨델", "short": "알라 혼파이프", "pop": [], "orig": ""}, {"n": 14, "w": 3, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "게오르크 프리드리히 헨델", "compEn": "George Frideric Handel", "title": "오페라 <로델린다> HWV 19 - '내 사랑하는 이여' (Mio caro bene)", "en": "Opera \"Rodelinda\", HWV 19 – 'Mio caro bene'", "g": "voice", "v": "Lk9nznotFNM", "rec": "조수미", "clue": "현악 반주 + 소프라노 독창, 이탈리아어, 기쁨에 넘치는 밝은 장조와 화려한 기교", "tip": "이탈리아어 독창인데 밝고 기쁨 → 로델린다 / 느리고 애절 → 비발디 칸타타", "warn": "", "ck": "헨델", "short": "로델린다 '내 사랑하는 이여'", "pop": [], "orig": ""}, {"n": 15, "w": 3, "era": "바로크 시대", "eraEn": "Baroque period", "comp": "게오르크 프리드리히 헨델", "compEn": "George Frideric Handel", "title": "오라토리오 <메시아> HWV 56 - '할렐루야' 합창", "en": "Oratorio \"Messiah\", HWV 56 – 'Hallelujah' Chorus", "g": "choir", "v": "gFRI-Ar5hTs", "rec": "", "clue": "짧은 현악 도입 → 혼성 합창 'Hal-le-lu-jah!' 반복, 트럼펫·팀파니, 웅장한 장조", "tip": "합창은 이 곡뿐 (링크 기준). 영어 가사", "warn": "", "ck": "헨델", "short": "할렐루야", "pop": [], "orig": ""}, {"n": 16, "w": 4, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "프란츠 요제프 하이든", "compEn": "Franz Joseph Haydn", "title": "현악 4중주 제53번 종달새 1악장, 라장조, Hob. III/63", "en": "String Quartet No. 53 in D Major, Op. 64, No. 5 \"The Lark\" - I. Allegro moderato", "g": "chamber", "v": "fxVKqMHGlWI", "rec": "하겐 4중주단", "clue": "현악기 4대뿐(가볍고 투명). 아래 세 악기가 '톡톡' 스타카토 반주 몇 마디 → 1바이올린이 아주 높은 음에서 길게 노래하며 등장(종달새)", "tip": "현악합주(K.136)는 첫 박부터 모두 함께 / 종달새는 반주 먼저, 높은 바이올린 나중", "warn": "", "ck": "하이든", "short": "종달새 1악장", "pop": [], "orig": ""}, {"n": 17, "w": 4, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "프란츠 요제프 하이든", "compEn": "Franz Joseph Haydn", "title": "놀람 교향곡 제94번 2악장, 사장조, Hob. I/94", "en": "Symphony No. 94 in G Major \"Surprise\" - II. Andante, Hob. I:94", "g": "orchC", "v": "qG5Z9LzbQpQ", "rec": "", "clue": "현악이 아주 작게 동요 같은 단순한 스타카토 주제('도도미미솔솔미~') → 더 작게 반복 → 갑자기 오케스트라 '쾅!'(팀파니)", "tip": "작게 시작하다 '쾅' = 놀람. 30초 안에 확인 가능", "warn": "", "ck": "하이든", "short": "놀람 2악장", "pop": [], "orig": ""}, {"n": 18, "w": 4, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "프란츠 요제프 하이든", "compEn": "Franz Joseph Haydn", "title": "트럼펫 협주곡 3악장, 내림 마장조, Hob. VIIe/1", "en": "Trumpet Concerto in E-flat Major - III. Finale: Allegro, Hob. VIIe:1", "g": "orchC", "v": "hb5MSJcBb9o", "rec": "윈턴 마살리스", "clue": "현악이 경쾌한 주제를 작게 시작 → 오케스트라 전체 → 솔로 트럼펫이 같은 주제로 등장, 밝은 장조 론도", "tip": "트럼펫 '솔로'가 주인공인 고전풍 곡 → 하이든. (헨델 혼파이프는 금관이 합주 일부, 3박 춤곡)", "warn": "", "ck": "하이든", "short": "하이든 트럼펫 협주곡", "pop": [], "orig": ""}, {"n": 19, "w": 4, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "볼프강 아마데우스 모차르트", "compEn": "Wolfgang Amadeus Mozart", "title": "잘츠부르크 교향곡 디베르티멘토 제1번, 1악장, 라장조, KV136", "en": "Salzburg Symphony (Divertimento No. 1) in D Major - I. Allegro, K. 136", "g": "chamber", "v": "5uCVqZISD54", "rec": "베를린 필 현악", "clue": "현악기만(관악 없음), 첫 박부터 다 함께 힘차게 — 위로 솟구치는 밝고 빠른 장조 주제, 트릴", "tip": "현악만 + 처음부터 활기 → K.136 / 반주 먼저 + 높은 바이올린 → 종달새", "warn": "", "ck": "모차르트", "short": "디베르티멘토 K.136", "pop": [], "orig": ""}, {"n": 20, "w": 4, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "볼프강 아마데우스 모차르트", "compEn": "Wolfgang Amadeus Mozart", "title": "터키 행진곡 피아노 소나타 제11번, 3악장, 가장조, KV 331", "en": "Piano Sonata No. 11 in A Major - III. Alla Turca (Turkish March), K. 331", "g": "pfFast", "v": "n2Tru4Qa3pc", "rec": "윤디", "clue": "피아노. '따라라라 땀' 꾸밈 음형으로 단조로 빠르게 시작 → 장조로 바뀌며 왼손 '쿵짝' 행진 + 북처럼 울리는 꾸밈화음", "tip": "빠른 피아노 중 가볍고 단정한 고전풍 행진 → 터키 행진곡", "warn": "", "ck": "모차르트", "short": "터키 행진곡", "pop": [], "orig": ""}, {"n": 21, "w": 5, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "루드비히 판 베토벤", "compEn": "Ludwig van Beethoven", "title": "피아노 소나타 제8번 '비창', 2악장 내림가장조, 작품번호 13", "en": "Piano Sonata No. 8 \"Pathétique\" - II. Adagio cantabile", "g": "pfSlow", "v": "vGq3-Fi_zQY", "rec": "바렌보임", "clue": "피아노. 가운데 음역에서 찬송가처럼 단정하고 따뜻한 장조 선율이 바로 시작, 그 아래 잔잔한 16분음표 반주가 깔림", "tip": "선율이 '가운데' 음역 + 단정한 2박 → 비창 / 위아래로 휘감는 아르페지오 + 3박 → 사랑의 꿈", "warn": "", "ck": "베토벤", "short": "비창 2악장", "pop": ["NCT 2023 'Golden Age'(2023) — 이 2악장 선율 인용", "빌리 조엘 'This Night' 후렴 선율도 이 2악장"], "orig": ""}, {"n": 22, "w": 5, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "루드비히 판 베토벤", "compEn": "Ludwig van Beethoven", "title": "피아노 소나타 제14번 '월광', 제1악장 올림다단조, 작품번호 27-2", "en": "Piano Sonata No. 14 \"Moonlight\" - I. Adagio sostenuto", "g": "pfSlow", "v": "oqnKwesvSGQ", "rec": "아라우", "clue": "피아노. 낮은 옥타브 베이스 + '따라란 따라란' 셋잇단 분산화음이 끝없이 반복, 아주 느리고 어두운 단조. 높은 같은 음 반복 선율('따—안 따')은 조금 뒤 등장", "tip": "느린 피아노 중 '단조'는 사실상 월광뿐", "warn": "", "ck": "베토벤", "short": "월광 1악장", "pop": ["빅스 '판타지', 태민 'Bones' — 월광 소나타 샘플링 (몇 악장인지 출처에 표기 없음)"], "orig": ""}, {"n": 23, "w": 5, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "루드비히 판 베토벤", "compEn": "Ludwig van Beethoven", "title": "가곡 '그대를 사랑해' (Ich liebe dich), WoO 123", "en": "Lied 'Ich liebe dich' (I Love Thee), WoO 123", "g": "voice", "v": "abWVutb4BY4", "rec": "프리츠 분더리히(테너)", "clue": "피아노 반주 + 남성 테너 독창, 독일어 'Ich liebe dich…', 노래가 거의 바로 시작, 따뜻하고 단순한 장조. 2분 남짓", "tip": "독일어 독창 중 남성 + 밝고 짧음 → 그대를 사랑해 / 셋잇단 전주 + 여성 → 보리수", "warn": "", "ck": "베토벤", "short": "그대를 사랑해", "pop": [], "orig": ""}, {"n": 24, "w": 5, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "루드비히 판 베토벤", "compEn": "Ludwig van Beethoven", "title": "교향곡 제5번 '운명', 제4악장 다단조, 작품번호 67", "en": "Symphony No. 5 in C Minor, Op. 67 \"Fate\" - IV. Allegro", "g": "orchC", "v": "3WZP7-41iAU", "rec": "예르비", "clue": "오케스트라 전원 포르티시모로 '도-미-솔' 위로 올라가는 승리의 팡파르(트롬본·팀파니), 찬란한 장조 행진", "tip": "처음부터 최대 음량의 승리감 → 운명 4악장", "warn": "", "ck": "베토벤", "short": "운명 4악장", "pop": ["퍼플키스 'Pretty Psycho', 올아워즈 'Kings & Queens' — 운명 교향곡 인용 (몇 악장인지 출처에 표기 없음)", "주의: 누구나 아는 '빠바바밤'은 1악장. 시험곡인 4악장은 승리의 팡파르로 시작"], "orig": ""}, {"n": 25, "w": 5, "era": "고전주의 시대", "eraEn": "Classical period", "comp": "루드비히 판 베토벤", "compEn": "Ludwig van Beethoven", "title": "교향곡 제6번 '전원', 제2악장 (시냇가의 풍경) 바장조, 작품번호 68", "en": "Symphony No. 6 \"Pastoral\" - II. Scene by the Brook", "g": "orchC", "v": "nsZGTR4bnmQ", "rec": "", "clue": "현악이 '찰랑찰랑' 흔들리는 물결 반주(시냇물) → 그 위로 바이올린의 부드러운 선율, 느긋하고 평화로운 장조", "tip": "물 흐르는 듯한 반주의 평화로운 관현악 → 전원. (새소리 목관은 악장 끝부분)", "warn": "", "ck": "베토벤", "short": "전원 2악장", "pop": [], "orig": ""}, {"n": 26, "w": 6, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 페테르 슈베르트", "compEn": "Franz Peter Schubert", "title": "아베 마리아, '엘렌의 세 번째 노래', 바장조, 작품번호 52-6, D.839", "en": "Ave Maria, 'Ellens dritter Gesang', in F Major, Op. 52-6, D. 839", "g": "voice", "v": "tDQj7j-xogM", "rec": "바바라 보니(소프라노)", "clue": "피아노의 하프 같은 분산화음 짧은 전주 → 소프라노가 'A-ve Ma-ri-a' 느리고 경건하게", "tip": "'아베 마리아' 가사로 즉시 확인", "warn": "", "ck": "슈베르트", "short": "아베 마리아", "pop": [], "orig": ""}, {"n": 27, "w": 6, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 페테르 슈베르트", "compEn": "Franz Peter Schubert", "title": "가곡집 '겨울 나그네' 중 제5곡 '보리수', 마장조, 작품번호 89, D.911", "en": "Winterreise, Op. 89, D. 911 - No. 5 'Der Lindenbaum' in E Major", "g": "voice", "v": "8ughUlgA8vw", "rec": "나나 무스쿠리(여성)", "clue": "떨리는 셋잇단 전주(나뭇잎 바람 소리) → 호른 같은 화음 → 'Am Brunnen vor dem Tore…' 소박한 민요풍 장조", "tip": "⚠ 링크는 여성 가수 버전(원래는 남성 가곡). 셋잇단 '떨림' 전주가 핵심", "warn": "시험 음원도 이 여성 가수 버전이에요", "ck": "슈베르트", "short": "보리수", "pop": [], "orig": ""}, {"n": 28, "w": 6, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 페테르 슈베르트", "compEn": "Franz Peter Schubert", "title": "피아노 5중주 '송어', 제4악장 가장조, 작품번호 114, D.667", "en": "Piano Quintet in A Major \"Trout\", IV. Andantino (Theme and Variations), Op. 114, D. 667", "g": "chamber", "v": "0QqFhk6NZFg", "rec": "", "clue": "현악기만(바이올린·비올라·첼로·콘트라베이스)으로 소박하고 귀여운 '송어' 가곡 주제를 먼저 제시 → 제1변주에서 피아노가 높은 음역으로 주제를 연주", "tip": "실내악인데 노래 같은 단순한 주제 + 나중에 피아노 → 송어", "warn": "", "ck": "슈베르트", "short": "송어 4악장", "pop": [], "orig": ""}, {"n": 29, "w": 6, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 페테르 슈베르트", "compEn": "Franz Peter Schubert", "title": "교향곡 제7번(8번) '미완성', 제1악장 나단조, D.759", "en": "Symphony No. 7(8) in B Minor \"Unfinished\", I. Allegro moderato, D. 759", "g": "orchC", "v": "5zNI5FgGzjA", "rec": "베를린 필", "clue": "첼로·콘트라베이스가 아주 낮고 조용하게 어두운 단조 선율 → 바이올린 '사각사각' 떨림 + 오보에·클라리넷의 슬픈 주제 → 갑작스러운 폭발. 1분 남짓 뒤 첼로의 서정적 제2주제", "tip": "교향곡 중 '낮은 저음 + 어둠'으로 시작 → 미완성", "warn": "", "ck": "슈베르트", "short": "미완성 1악장", "pop": [], "orig": ""}, {"n": 30, "w": 6, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 페테르 슈베르트", "compEn": "Franz Peter Schubert", "title": "즉흥곡 제3번, 내림나장조, 작품번호 90, D.899", "en": "Impromptu No. 3 in G-flat Major Op. 90, D. 899", "g": "pfSlow", "v": "hp5G8cdZZuI", "rec": "우치다 미츠코", "clue": "피아노. 가운데 음역에서 쉬지 않고 흐르는 분산음 반주 위로, 높은 음역에서 긴 호흡의 장조 선율이 처음부터 노래", "tip": "구조는 월광과 비슷하지만 밝은 장조 + 선율이 처음부터 → 즉흥곡", "warn": "목록 한글은 '내림나장조', 영문은 G-flat(=내림사장조). 목록 표기대로 쓰되 교수님께 확인 권장", "ck": "슈베르트", "short": "슈베르트 즉흥곡 3번", "pop": [], "orig": ""}, {"n": 31, "w": 7, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "로베르트 알렉산더 슈만", "compEn": "Robert Alexander Schumann", "title": "어린이의 정경 제7번, '트로이메라이'(꿈), 바장조, 작품번호 15", "en": "Kinderszenen No. 7, 'Träumerei' (Dreaming) in F Major, Op. 15", "g": "pfSlow", "v": "7HDFeEexQ-8", "rec": "호로비츠", "clue": "피아노. 위로 한 번 도약('도—파~')했다가 천천히 내려오는 아치형 선율, 꿈꾸듯 느리고 자유로운 템포. 2분 반 정도로 짧음", "tip": "짧고 단순, 도약 후 내려오는 선율 → 트로이메라이", "warn": "", "ck": "슈만", "short": "트로이메라이", "pop": [], "orig": ""}, {"n": 32, "w": 7, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "로베르트 알렉산더 슈만", "compEn": "Robert Alexander Schumann", "title": "피아노 4중주, '안단테 칸타빌레', 제3악장, 내림 마장조, 작품번호 47", "en": "Piano Quartet in E-flat Major, III. Andante cantabile, Op. 47", "g": "chamber", "v": "nJ6w_HYb4QM", "rec": "요요마", "clue": "짧은 조용한 서주 → 첼로가 깊고 따뜻한 긴 선율을 노래, 피아노는 조용히 반주", "tip": "실내악에서 '첼로 + 피아노'가 주인공 → 슈만 / 비올라가 엄숙한 단조로 시작 → 브람스 6중주", "warn": "", "ck": "슈만", "short": "슈만 피아노 4중주 3악장", "pop": [], "orig": ""}, {"n": 33, "w": 7, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "요하네스 브람스", "compEn": "Johannes Brahms", "title": "현악 6중주 제1번, '브람스의 눈물', 제2악장, 내림 나장조, 작품번호 18", "en": "String Sextet No. 1 in B-flat Major, II. Andante ma moderato, Op. 18", "g": "chamber", "v": "h1AZ8FmIWcI", "rec": "", "clue": "비올라가 무겁고 엄숙한 단조 주제를 시작, 첼로가 저음 반주 → 현악기 6대의 두터운 소리로 변주. 비장하고 영화음악 같은 느낌", "tip": "피아노 없음 + 단조 + 비장 → 브람스의 눈물", "warn": "", "ck": "브람스", "short": "브람스의 눈물", "pop": [], "orig": ""}, {"n": 34, "w": 7, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "요하네스 브람스", "compEn": "Johannes Brahms", "title": "헝가리 무곡, 제5번, 사단조, WoO 1", "en": "Hungarian Dance No. 5 in G Minor, WoO 1", "g": "orchC", "v": "PyCHVikkt-E", "rec": "카라얀", "clue": "오케스트라. 빠르고 정열적인 집시풍 단조, 갑자기 느려졌다 다시 빨라지는 템포 변화. 2분 남짓", "tip": "누구나 아는 멜로디 + 템포 밀고 당기기 → 헝가리 무곡", "warn": "", "ck": "브람스", "short": "헝가리 무곡 5번", "pop": ["채플린 영화 '위대한 독재자' 면도 장면 음악", "조혜련 '가라', 앨런 워커 'Lovesick' 샘플링", "펌프잇업·EZ2DJ 같은 리듬게임 수록곡"], "orig": ""}, {"n": 35, "w": 7, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "요하네스 브람스", "compEn": "Johannes Brahms", "title": "교향곡 제3번, 제3악장, 바단조, 작품번호 90", "en": "Symphony No. 3 in F Major, III. Poco allegretto, Op. 90", "g": "orchC", "v": "t9ndxDhgZBM", "rec": "베를린 필", "clue": "첼로가 애수 어린 단조 선율을 노래, 현악이 잔잔히 흔들리는 3박 반주, 중간 템포 — 서글프지만 우아함", "tip": "관현악 + 첼로의 서글픈 노래 + 3박 흔들림 → 브람스 3번 3악장", "warn": "", "ck": "브람스", "short": "브람스 교향곡 3번 3악장", "pop": [], "orig": ""}, {"n": 36, "w": 9, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 리스트", "compEn": "Franz Liszt", "title": "파가니니 주제에 의한 대연습곡 제3번 '라 캄파넬라' 올림 사단조, S.141", "en": "Grandes études de Paganini, S. 141 - No. 3 \"La Campanella\" in G-sharp Minor", "g": "pfFast", "v": "rP8SD_pEd60", "rec": "시미즈 가즈네", "clue": "피아노. 아주 높은 음역에서 같은 음을 큰 도약으로 '딩—딩' 반복하는 종소리, 반짝이고 경쾌한 단조", "tip": "고음 종소리 반복 → 캄파넬라 / 처음부터 폭발적 연타 → 마제파", "warn": "", "ck": "리스트", "short": "라 캄파넬라", "pop": ["블랙핑크 'Shut Down'(2022) — 같은 '라 캄파넬라' 선율 (블랙핑크는 파가니니의 바이올린 원곡을, 리스트는 그 선율을 피아노곡으로 편곡)"], "orig": ""}, {"n": 37, "w": 9, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 리스트", "compEn": "Franz Liszt", "title": "3개의 야상곡 제3번 '사랑의 꿈' 내림 가장조, 작품번호 62-1, S.541", "en": "Liebesträume, S. 541 - No. 3 in A-flat Major", "g": "pfSlow", "v": "KpOtuoHL45Y", "rec": "", "clue": "피아노. 3박으로 흔들리며, 가운데 음역(엄지)에서 아주 유명한 감미로운 선율이 시작되고 양손 분산화음이 위아래로 감쌈. 중간에 화려한 카덴차", "tip": "유명한 멜로디 + 풍성한 아르페지오 → 사랑의 꿈 / 더 담백·고요 → 위안 3번", "warn": "", "ck": "리스트", "short": "사랑의 꿈 3번", "pop": [], "orig": ""}, {"n": 38, "w": 9, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 리스트", "compEn": "Franz Liszt", "title": "위안 제3번 내림 라장조, S.172", "en": "Consolations, S. 172 - No. 3 in D-flat Major", "g": "pfSlow", "v": "SbPIqimhf78", "rec": "조성진", "clue": "피아노. 왼손의 낮은 분산화음으로 조용히 몇 마디 시작 → 단순하고 고요한 장조 선율, 기도하듯 잔잔함", "tip": "사랑의 꿈보다 담백하고 카덴차 없이 고요 → 위안", "warn": "", "ck": "리스트", "short": "위안 3번", "pop": [], "orig": ""}, {"n": 39, "w": 9, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 리스트", "compEn": "Franz Liszt", "title": "초절기교 연습곡 제4번 '마제파' 라단조, S.139", "en": "Transcendental Étude No. 4 \"Mazeppa\" in D Minor, S. 139", "g": "pfFast", "v": "CXGeOHdiHrE", "rec": "트리포노프", "clue": "피아노. 첫 음부터 폭발 — 양손 빠른 교차 연타의 격렬한 도입 → 굵은 화음으로 웅장한 단조 주제(말이 질주하는 듯)", "tip": "가장 격렬한 피아노곡 → 마제파", "warn": "", "ck": "리스트", "short": "마제파", "pop": [], "orig": ""}, {"n": 40, "w": 9, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "프란츠 리스트", "compEn": "Franz Liszt", "title": "꿈속에서 야상곡 나장조, S.207", "en": "En rêve, Nocturne in B Major, S. 207", "g": "pfSlow", "v": "KxKAGQlNBJg", "rec": "브렌델", "clue": "피아노. 조용하고 단순한 선율에 트릴이 반짝이는 몽롱하고 투명한 분위기. 2분 남짓으로 매우 짧음", "tip": "짧고 몽롱 + 트릴 → 꿈속에서 / 짧고 아치형 선율 → 트로이메라이", "warn": "", "ck": "리스트", "short": "꿈속에서", "pop": [], "orig": ""}, {"n": 41, "w": 10, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "주세페 베르디", "compEn": "Giuseppe Verdi", "title": "히브리 노예의 합창, 오페라 <나부코>", "en": "Chorus of the Hebrew Slaves 'Va, pensiero', Opera \"Nabucco\"", "g": "verdi", "v": "2VejTwFjwVI", "rec": "", "clue": "목관의 조용하고 어두운 서주 → 한 번 크게 부풀었다 잦아듦 → 잔잔한 현 반주 위로 합창이 한 목소리(유니즌)로 느리고 그리운 장조 선율 'Va, pensiero…'", "tip": "베르디 5곡 중 유일하게 느리고 서정적인 합창 → 나부코", "warn": "", "ck": "베르디", "short": "히브리 노예의 합창", "pop": [], "orig": ""}, {"n": 42, "w": 10, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "주세페 베르디", "compEn": "Giuseppe Verdi", "title": "대장간의 합창, 오페라 <일 트로바토레>", "en": "Anvil Chorus, Opera \"Il trovatore\"", "g": "verdi", "v": "Bl1-n-77wD4", "rec": "", "clue": "활기찬 오케스트라 도입 → 남성 합창 + 망치로 모루를 내리치는 '쨍! 쨍!' 금속 소리, 힘차고 빠른 장조", "tip": "쇠망치 금속 소리 = 대장간의 합창", "warn": "", "ck": "베르디", "short": "대장간의 합창", "pop": [], "orig": ""}, {"n": 43, "w": 10, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "주세페 베르디", "compEn": "Giuseppe Verdi", "title": "축배의 노래, 오페라 <라 트라비아타>", "en": "Brindisi 'Libiamo ne' lieti calici', Opera \"La traviata\"", "g": "verdi", "v": "UZvgmpiQCcI", "rec": "연습용 대체 음원: 글라인드본 공연", "clue": "오케스트라의 경쾌한 3박 왈츠 전주('쿵짝짝') → 테너 독창 'Libiamo…' → 소프라노가 이어받고 합창이 함께, 흥겨운 축배 분위기", "tip": "3박 왈츠 + 남녀가 번갈아 부름 → 축배의 노래", "warn": "시험에는 교수님 링크(조수미·최재림 공연)가 나와요. 그 영상은 다른 사이트에서의 재생이 막혀 있어서 퀴즈는 다른 연주로 재생해요. 아래 버튼으로 시험 음원을 꼭 한 번 들어보세요", "ck": "베르디", "short": "축배의 노래", "pop": [], "orig": "nkG8mdan9hA"}, {"n": 44, "w": 10, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "주세페 베르디", "compEn": "Giuseppe Verdi", "title": "개선 행진곡, 오페라 <아이다>", "en": "Triumphal March, Opera \"Aida\"", "g": "verdi", "v": "JXMdei-UTfw", "rec": "연습용 대체 음원: 'Gloria all'Egitto'부터 시작하는 장면 전체", "clue": "교수님 링크는 12분짜리 장면 전체라 대합창이 먼저일 가능성이 높음: 큰 오케스트라와 합창이 'Gloria all'Egitto' 환호로 시작 → 몇 분 뒤 긴 트럼펫들이 유명한 개선 행진 선율을 연주", "tip": "환호하는 대합창 + 트럼펫 팡파르 → 아이다. 트럼펫 행진 선율이 들리면 확실", "warn": "시험에는 교수님 링크(아레나 디 베로나 2018, 12분 장면 전체)가 나와요. 그 영상은 다른 사이트에서의 재생이 막혀 있어서 퀴즈는 비슷한 구성의 다른 연주로 재생해요. 아래 버튼으로 시험 음원을 꼭 한 번 들어보세요", "ck": "베르디", "short": "아이다 개선 행진곡", "pop": [], "orig": "xLkdSIPvWzM"}, {"n": 45, "w": 10, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "주세페 베르디", "compEn": "Giuseppe Verdi", "title": "진노의 날, 레퀴엠 제2곡 Op. 48", "en": "Messa da Requiem - No. 2 'Dies irae'", "g": "verdi", "v": "wCgOclzTd4Q", "rec": "카라얀", "clue": "첫 순간부터 오케스트라 전체가 '쾅! 쾅! 쾅! 쾅!' 내리치고 큰북이 엇박으로 강타 → 합창이 비명처럼 'Di-es i-rae!'(라틴어), 현악의 빠른 하강 음형, 격렬한 단조", "tip": "가장 무섭고 격렬한 합창 → 진노의 날", "warn": "", "ck": "베르디", "short": "진노의 날", "pop": [], "orig": ""}, {"n": 46, "w": 11, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "요한 스트라우스 1세", "compEn": "Johann Strauss I", "title": "라데츠키 행진곡, 라장조, 작품번호 228번", "en": "Radetzky March in D Major, Op. 228", "g": "strauss", "v": "Th89WmlF9WY", "rec": "바렌보임·빈 필, 2022 신년음악회", "clue": "작은북 '따다다닥' 짧은 도입 → 오케스트라의 경쾌하고 씩씩한 2박 행진. 신년음악회 실황이라 관객 박수 장단이 들릴 수 있음. 3분 남짓", "tip": "슈트라우스 중 유일한 '행진곡'(2박, 작은북) → 라데츠키 / 3박 쿵짝짝이면 왈츠", "warn": "", "ck": "스트라우스 1세", "short": "라데츠키 행진곡", "pop": ["빈 필하모닉 신년음악회의 마지막 곡. 관객이 박수로 장단을 맞추는 전통"], "orig": ""}, {"n": 47, "w": 11, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "요한 스트라우스 2세", "compEn": "Johann Strauss II", "title": "아름답고 푸른 도나우 강 왈츠, 작품번호 314번", "en": "The Blue Danube Waltz, Op. 314", "g": "strauss", "v": "HzamukLICm8", "rec": "바렌보임·빈 필, 2022 신년음악회", "clue": "현악의 아주 여린 떨림(트레몰로, 물결 반짝임) 위로 호른이 '도-미-솔' 올라가는 짧은 동기 → 점점 커지는 긴 서주 → 유명한 왈츠 '쿵짝짝 + 딴딴~ 딴딴'", "tip": "여린 현 떨림 + 호른 동기로 시작 → 도나우 / 목관의 한가로운 전원풍 서주 → 빈 숲", "warn": "", "ck": "스트라우스 2세", "short": "아름답고 푸른 도나우", "pop": ["영화 '2001: 스페이스 오디세이'의 우주선 도킹 장면 음악"], "orig": ""}, {"n": 48, "w": 11, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "요한 스트라우스 2세", "compEn": "Johann Strauss II", "title": "빈 숲 속의 이야기 왈츠, 작품번호 325번", "en": "Tales from the Vienna Woods, Waltz, Op. 325", "g": "strauss", "v": "9d48p5DKS_c", "rec": "보스코프스키·빈 필", "clue": "왈츠가 아닌 한가로운 전원풍 서주로 시작: 호른과 목관의 부드러운 부름, 새소리 같은 플루트 → 잠시 뒤 치터(금속 줄을 뜯는 민속 악기) 독주", "tip": "치터 소리는 이 곡뿐. 서주가 길어 1~2분 안에 왈츠가 안 나올 수 있음", "warn": "", "ck": "스트라우스 2세", "short": "빈 숲 속의 이야기", "pop": [], "orig": ""}, {"n": 49, "w": 11, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "요한 스트라우스 2세", "compEn": "Johann Strauss II", "title": "오페레타 '박쥐' 서곡, 작품번호 362번", "en": "Die Fledermaus: Overture, Op. 362", "g": "strauss", "v": "OvUsNUgPYRw", "rec": "클렘페러", "clue": "빠르고 들뜬 오케스트라로 바로 시작 → 분위기가 짧게짧게 계속 바뀜(느리고 애수 어린 오보에 선율 등) → 경쾌한 왈츠가 섞여 나오는 메들리", "tip": "춤곡 한 곡이 아니라 장면이 계속 바뀌는 '서곡' → 박쥐", "warn": "", "ck": "스트라우스 2세", "short": "박쥐 서곡", "pop": [], "orig": ""}, {"n": 50, "w": 11, "era": "낭만주의 시대", "eraEn": "Romantic period", "comp": "요한 스트라우스 2세", "compEn": "Johann Strauss II", "title": "트리치 트라치 폴카, 작품번호 214번", "en": "Tritsch-Tratsch-Polka, Op. 214", "g": "strauss", "v": "Ic4gsvXlfKI", "rec": "빈 소년합창단 (편곡)", "clue": "⚠ 링크는 빈 소년합창단이 부르는 편곡: 작은 오케스트라 + 맑은 소년 합창이 아주 빠른 2박 폴카를 수다스럽게 부름. 2분 40초로 짧음", "tip": "빠른 2박 + 소년 합창 → 트리치 트라치 / 작은북 행진 → 라데츠키", "warn": "시험에도 이 소년합창단 버전이 나옴 (원곡은 오케스트라만 연주)", "ck": "스트라우스 2세", "short": "트리치 트라치 폴카", "pop": [], "orig": ""}], "groups": [{"k": "voice", "name": "성악 독창", "desc": "한 사람이 노래한다"}, {"k": "choir", "name": "합창", "desc": "여러 사람이 함께 노래한다"}, {"k": "baroque", "name": "오르간·하프시코드", "desc": "바로크 악기 특유의 소리 (파이프오르간 / 챙챙거리는 하프시코드)"}, {"k": "orchB", "name": "바로크 합주", "desc": "현악 중심 소편성 합주·협주곡, 화려한 장식"}, {"k": "orchC", "name": "교향곡·관현악 (고전·낭만)", "desc": "관악·팀파니까지 갖춘 큰 오케스트라"}, {"k": "chamber", "name": "현악 앙상블·실내악 (고전·낭만)", "desc": "관악 없이 현악기(+피아노)만"}, {"k": "pfFast", "name": "피아노 독주 — 빠르고 화려", "desc": "빠른 템포·기교"}, {"k": "pfSlow", "name": "피아노 독주 — 느리고 서정", "desc": "가장 헷갈리는 그룹 — 비교 노트 참고"}, {"k": "verdi", "name": "오페라·레퀴엠 (베르디)", "desc": "큰 오케스트라 + 이탈리아어·라틴어 합창/성악"}, {"k": "strauss", "name": "왈츠·행진곡·폴카 (슈트라우스)", "desc": "빈 풍의 밝고 경쾌한 춤곡 오케스트라"}], "compare": [["느린 피아노 9곡 (가장 헷갈림)", [["단조, 셋잇단 분산화음 반복, 어두움", 22], ["바로크풍: 셋잇단 흐름 + 찬송가 선율", 8], ["바로크풍: 꾸밈음 많은 느린 3박", 10], ["단정한 찬송가풍, 선율이 가운데 음역", 21], ["흐르는 분산음 위 높은 선율, 처음부터 노래", 30], ["도약 후 내려오는 아치형, 2분 반", 31], ["유명한 선율 + 위아래 아르페지오 + 카덴차", 37], ["왼손 분산화음 도입 → 담백·고요", 38], ["트릴 반짝, 몽롱, 2분 남짓", 40]]], ["빠르고 화려한 피아노 3곡", [["가볍고 단정한 고전풍 행진", 20], ["고음 종소리 '딩—딩' 도약", 36], ["첫 음부터 폭발적 연타, 웅장", 39]]], ["성악 독창 6곡 — 언어와 목소리로", [["이탈리아어, 낮은 목소리, 느리고 애절", 5], ["이탈리아어, 소프라노, 밝고 화려", 14], ["영어, 소년 목소리 + 솔로 트럼펫", 12], ["독일어, 남성 테너, 짧고 밝음", 23], ["독일어, 셋잇단 떨림 전주, 민요풍(여성 가수)", 27], ["'아베 마리아' 가사, 하프 같은 반주", 26]]], ["현악 위주 합주·실내악", [["느림 + 단조·비통, 오르간 반주", 1], ["느림 + 장조·평온, 걷는 베이스", 9], ["4명, 반주 먼저 → 높은 1바이올린", 16], ["현악합주, 첫 박부터 다 함께 힘차게", 19], ["노래 같은 단순 주제 → 나중에 피아노", 28], ["첼로 선율 + 피아노 반주", 32], ["비올라로 시작, 엄숙한 단조, 6대", 33]]], ["비발디 협주곡 3곡", [["밝은 장조 + 메아리 + 새소리", 2], ["사단조, 첫 음부터 폭풍 연타", 3], ["사단조, 투티-솔로 교대, 덜 격렬", 4]]], ["트럼펫·축제풍", [["합창 'Hallelujah'", 15], ["노래 없음, 금관+현 3박 춤곡", 13], ["독창 + 트럼펫 긴 음 응답", 12], ["고전풍, 솔로 트럼펫 협주", 18], ["점음표 '따—안 따' 장중한 서곡", 11]]], ["베르디 5곡 — 오페라·레퀴엠", [["느리고 그리운 합창, 한 목소리(유니즌)", 41], ["쇠망치 '쨍!' 금속 소리 + 남성 합창", 42], ["3박 왈츠 + 테너·소프라노 번갈아", 43], ["환호하는 대합창 + 트럼펫 행진", 44], ["'쾅쾅' 큰북 + 비명 같은 합창, 단조", 45], ["(참고) 영어 합창 'Hallelujah'는 헨델", 15]]], ["슈트라우스 5곡 — 빈의 춤곡", [["작은북 + 씩씩한 2박 행진, 박수", 46], ["여린 현 떨림 + 호른 '도-미-솔'", 47], ["한가로운 전원풍 서주, 치터 독주", 48], ["분위기가 계속 바뀌는 서곡 메들리", 49], ["소년 합창 + 아주 빠른 2박 폴카", 50]]], ["교향곡·관현악", [["작게 → 갑자기 '쾅!'", 17], ["처음부터 최대 음량 승리 팡파르", 24], ["찰랑이는 물결 반주, 평화", 25], ["낮은 첼로·베이스로 어둡게 시작", 29], ["빠른 집시풍, 템포 밀당", 34], ["첼로의 서글픈 노래, 3박 흔들림", 35]]]]};
+const byN = Object.fromEntries(D.items.map(i => [i.n, i]));
+const G = Object.fromEntries(D.groups.map(g => [g.k, g]));
+const WEEKS = [...new Set(D.items.map(i => i.w))];
+const yt = id => "https://www.youtube.com/watch?v=" + id;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ansLine = i => `${i.era} / ${i.comp} / ${i.title}`;
+const ansEn = i => `${i.eraEn} / ${i.compEn} / ${i.en}`;
+const popList = i => i.pop.length === 1 ? esc(i.pop[0]) : `<ul>${i.pop.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+const gtag = k => `<span class="gtag" style="--gc:var(--g-${k})">${esc(G[k].name)}</span>`;
+
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let rec = store.get("cmt-rec", {});            // {n: {ok, ng, last}}
+let weeks = new Set(store.get("cmt-weeks", WEEKS));
+{ const known = store.get("cmt-known", []); WEEKS.filter(w => !known.includes(w)).forEach(w => weeks.add(w)); store.set("cmt-known", WEEKS); }
+let mode = store.get("cmt-mode", "listen");
+let onlyWrong = false, deck = [], pos = 0, shown = false;
+
+function pool(){
+  return D.items.filter(i => weeks.has(i.w) && (!onlyWrong || (rec[i.n] && rec[i.n].last === "ng"))).map(i => i.n);
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function newDeck(){ deck = shuffle(pool()); pos = 0; shown = false; renderCard(); renderStats(); }
+
+function renderWeeks(){
+  const el = document.getElementById("weeks");
+  el.innerHTML = WEEKS.map(w => `<label class="chip ${weeks.has(w)?"on":""}"><input type="checkbox" id="w${w}" ${weeks.has(w)?"checked":""}> ${w}주차</label>`).join("");
+  WEEKS.forEach(w => document.getElementById("w"+w).addEventListener("change", e => {
+    e.target.checked ? weeks.add(w) : weeks.delete(w);
+    store.set("cmt-weeks", [...weeks]); renderWeeks(); newDeck();
+  }));
+}
+function renderMode(){
+  document.getElementById("m-listen").classList.toggle("on", mode==="listen");
+  document.getElementById("m-clue").classList.toggle("on", mode==="clue");
+}
+function renderStats(){
+  const ns = D.items.filter(i => weeks.has(i.w)).map(i => i.n);
+  const tried = ns.filter(n => rec[n]);
+  const okNow = tried.filter(n => rec[n].last === "ok").length;
+  const ngNow = tried.filter(n => rec[n].last === "ng").length;
+  document.getElementById("stats").innerHTML =
+    `<span>범위 <b>${ns.length}</b>곡</span><span>풀어본 곡 <b>${tried.length}</b></span><span class="ok">최근 맞힘 <b>${okNow}</b></span><span class="ng">최근 틀림 <b>${ngNow}</b></span>` +
+    (tried.length ? ` <button type="button" id="resetrec" class="small" style="padding:3px 10px">기록 지우기</button>` : "");
+  const r = document.getElementById("resetrec");
+  if(r) r.addEventListener("click", () => { r.outerHTML = `<span>지울까요? <button type="button" id="rr-yes" class="small btn-ng" style="padding:3px 10px">지우기</button> <button type="button" id="rr-no" class="small" style="padding:3px 10px">취소</button></span>`;
+    document.getElementById("rr-yes").onclick = () => { rec = {}; store.set("cmt-rec", rec); renderStats(); renderCard(); };
+    document.getElementById("rr-no").onclick = renderStats; });
+}
+let picked = null, result = null;
+function choicesHTML(i){
+  const ws = WEEKS.filter(w => weeks.has(w));
+  return `<div class="choices">
+    <div class="row" style="justify-content:space-between"><span class="small muted">${shown ? "정답 확인" : "들은 곡을 고르세요"} · 보기 ${D.items.filter(x => weeks.has(x.w)).length}곡</span>
+      ${shown ? "" : `<input type="search" id="cf" placeholder="보기에서 찾기 (예: 비발디, 트럼펫)" aria-label="보기에서 찾기" style="max-width:260px">`}</div>
+    ${ws.map(w => { const its = D.items.filter(x => x.w === w);
+      return `<div class="cw"><div class="cwh">${w}주차 · ${esc([...new Set(its.map(x => x.ck))].join("·"))}</div><div class="chs">${
+        its.map(x => { let cls = "choice";
+          if(shown){ if(x.n === i.n) cls += " right"; else if(x.n === picked) cls += " wrong"; }
+          else if(x.n === picked) cls += " sel";
+          return `<button type="button" class="${cls}" data-n="${x.n}" data-k="${esc((x.short+" "+x.comp+" "+x.title).toLowerCase())}" ${shown ? "disabled" : ""}>${esc(x.short)}</button>`; }).join("")
+      }</div></div>`; }).join("")}
+  </div>`;
+}
+function renderCard(){
+  const c = document.getElementById("card");
+  if(!deck.length || pos >= deck.length) stageOff();
+  if(!deck.length){ c.innerHTML = `<div class="empty">${onlyWrong ? "최근에 틀린 곡이 없습니다. '틀린 곡만'을 끄고 연습하세요." : "범위에서 주차를 하나 이상 고르세요."}</div>`; return; }
+  if(pos >= deck.length){
+    const ns = deck; const ok = ns.filter(n => rec[n] && rec[n].last==="ok").length;
+    c.innerHTML = `<div class="empty"><div class="qnum">${ok} <span>/ ${ns.length} 맞힘</span></div><p>한 바퀴 끝. 틀린 곡만 다시 돌려보세요.</p><div class="row" style="justify-content:center"><button class="primary" type="button" id="again">다시 섞어서 시작</button><button type="button" id="againwrong">틀린 곡만</button></div></div>`;
+    document.getElementById("again").onclick = () => { onlyWrong=false; document.getElementById("onlywrong").checked=false; syncWrongChip(); newDeck(); };
+    document.getElementById("againwrong").onclick = () => { onlyWrong=true; document.getElementById("onlywrong").checked=true; syncWrongChip(); newDeck(); };
+    return;
+  }
+  const i = byN[deck[pos]];
+  const r = rec[i.n];
+  stageFor(i);
+  const prompt = mode === "listen" ? "" : `<div class="cluebox">${esc(i.clue)}</div>`;
+  let verdict = "";
+  if(shown){
+    const p = picked ? byN[picked] : null;
+    verdict = result === "ok"
+      ? `<div class="verdict ok-v">정답이에요</div>`
+      : `<div class="verdict ng-v">${p ? `오답 · 고른 곡: ${esc(p.short)}${p.comp === i.comp ? " (작곡가는 맞았어요)" : ""}` : "모르겠어요 · 틀린 곡으로 기록했어요"}</div>`;
+  }
+  c.innerHTML = `
+    <div class="qhead"><div class="qnum">${pos+1} <span>/ ${deck.length}</span></div>
+      <span class="small muted">${r && !shown ? (r.last==="ok" ? '<span class="ok">지난번 맞힘</span>' : '<span class="ng">지난번 틀림</span>') : (shown ? "" : "처음 푸는 곡")}</span></div>
+    ${prompt}
+    ${verdict}
+    ${choicesHTML(i)}
+    ${shown ? reveal(i) : `<div class="row" style="margin-top:14px"><button class="primary" type="button" id="submit" ${picked ? "" : "disabled"}>제출</button><button type="button" id="dunno">모르겠어요</button><button type="button" id="skip">건너뛰기</button><span class="small muted">Enter: 제출</span></div>`}
+  `;
+  c.querySelectorAll(".choice:not([disabled])").forEach(b => b.onclick = () => {
+    picked = +b.dataset.n;
+    c.querySelectorAll(".choice.sel").forEach(x => x.classList.remove("sel"));
+    b.classList.add("sel"); document.getElementById("submit").disabled = false;
+  });
+  const cf = document.getElementById("cf");
+  if(cf) cf.oninput = () => { const q = cf.value.trim().toLowerCase();
+    c.querySelectorAll(".choice").forEach(b => b.hidden = !!q && !b.dataset.k.includes(q));
+    c.querySelectorAll(".cw").forEach(w => w.hidden = ![...w.querySelectorAll(".choice")].some(b => !b.hidden)); };
+  if(!shown){
+    document.getElementById("submit").onclick = () => answer(i, picked);
+    document.getElementById("dunno").onclick = () => answer(i, null);
+    document.getElementById("skip").onclick = () => { pos++; shown=false; picked=null; renderCard(); };
+  } else {
+    document.getElementById("next").onclick = nextQ;
+  }
+}
+function answer(i, n){
+  picked = n; result = n === i.n ? "ok" : "ng"; shown = true;
+  const r = rec[i.n] || {ok:0, ng:0};
+  r[result]++; r.last = result; rec[i.n] = r; store.set("cmt-rec", rec);
+  renderCard(); renderStats();
+}
+function nextQ(){ pos++; shown = false; picked = null; result = null; renderCard(); }
+document.addEventListener("keydown", e => {
+  if(e.key !== "Enter" || document.getElementById("v-quiz").hidden) return;
+  if(e.target.id === "cf") return;
+  if(!shown && picked){ e.preventDefault(); answer(byN[deck[pos]], picked); }
+  else if(shown && document.getElementById("next")){ e.preventDefault(); nextQ(); }
+});
+function reveal(i){
+  return `<div class="answer">
+      <div class="lbl">답안</div>
+      <div class="line">${esc(ansLine(i))}</div>
+      <div class="en">${esc(ansEn(i))}</div>
+    </div>
+    <dl class="facts">
+      <dt>편성</dt><dd>${gtag(i.g)}</dd>
+      ${mode==="clue" ? "" : `<dt>도입부</dt><dd>${esc(i.clue)}</dd>`}
+      <dt>구별</dt><dd>${esc(i.tip)}</dd>
+      ${i.pop.length ? `<dt>익숙한 곡</dt><dd class="pop">${popList(i)}</dd>` : ""}
+      ${i.rec ? `<dt>연주</dt><dd>${esc(i.rec)}</dd>` : ""}
+    </dl>
+    ${i.warn ? `<div class="warn">⚠ ${esc(i.warn)}</div>` : ""}
+    ${i.orig ? `<div class="row" style="margin-top:10px"><a class="btn" href="${yt(i.orig)}" target="_blank" rel="noopener">시험 음원(교수님 링크) 듣기 ↗</a></div>` : ""}
+    <div class="row" style="margin-top:14px"><button type="button" class="primary" id="next">다음 문제 →</button><span class="small muted">Enter</span></div>`;
+}
+function syncWrongChip(){ document.getElementById("wrongchip").classList.toggle("on", onlyWrong); }
+
+function renderSheet(filter){
+  const f = (filter||"").trim().toLowerCase();
+  const hit = i => !f || [ansLine(i), ansEn(i), i.clue, i.tip, i.rec, G[i.g].name].join(" ").toLowerCase().includes(f);
+  const html = D.groups.map(g => {
+    const its = D.items.filter(i => i.g === g.k && hit(i));
+    if(!its.length) return "";
+    return `<div class="group" style="--gc:var(--g-${g.k})"><div class="ghead"><h3>${esc(g.name)}</h3><span class="small muted">${esc(g.desc)}</span></div>
+      ${its.map(i => `<div class="item"><div class="no">${String(i.n).padStart(2,"0")}<br><span class="small">${i.w}주</span></div><div>
+        <div class="ans">${esc(ansLine(i))}</div>
+        <div class="clue">${esc(i.clue)}</div>
+        <div class="tip"><b>구별</b> ${esc(i.tip)}</div>
+        ${i.pop.length ? `<div class="pop">${popList(i)}</div>` : ""}
+        ${i.warn ? `<div class="warn">⚠ ${esc(i.warn)}</div>` : ""}
+      </div></div>`).join("")}</div>`;
+  }).join("");
+  document.getElementById("sheet").innerHTML = html || `<div class="empty">'${esc(filter)}'에 맞는 곡이 없습니다.</div>`;
+}
+function renderCompare(){
+  const pops = D.items.filter(i => i.pop.length);
+  document.getElementById("cmp").innerHTML = `<div class="panel" style="grid-column:1/-1"><h3>케이팝·대중매체로 기억하기</h3><table>${pops.map(i => `<tr><td class="pop">${popList(i)}</td><td>${esc(i.short)} <span class="muted mono small">${String(i.n).padStart(2,"0")}</span></td></tr>`).join("")}</table></div>` + D.compare.map(([t, rows]) => `<div class="panel"><h3>${esc(t)}</h3><table>${rows.map(([d, n]) => {
+    const i = byN[n]; return `<tr><td>${esc(d)}</td><td>${esc(i.short)} <span class="muted mono small">${String(n).padStart(2,"0")}</span></td></tr>`; }).join("")}</table></div>`).join("");
+}
+function renderPlaylist(){
+  document.getElementById("pl").innerHTML = WEEKS.map(w => {
+    const its = D.items.filter(i => i.w === w);
+    return `<div class="week"><h3>${w}주차 · ${esc(its[0].era)} <span class="muted small">(${[...new Set(its.map(i=>i.comp))].map(esc).join(", ")})</span></h3><ol>
+      ${its.map(i => `<li><span><span class="mono muted small">${String(i.n).padStart(2,"0")}</span> ${esc(i.title)}${i.rec && !i.orig ? ` <span class="muted small">· ${esc(i.rec)}</span>` : ""}${i.orig ? ` <span class="muted small">· 교수님 원래 음원 (퀴즈에서는 다른 연주로 재생)</span>` : ""}${i.pop.length ? `<div class="pop small">${esc(i.pop[0])}</div>` : ""}</span><a href="${yt(i.orig||i.v)}" target="_blank" rel="noopener">듣기 ↗</a></li>`).join("")}</ol></div>`;
+  }).join("");
+}
+
+const VIEWS = ["quiz","sheet","compare","playlist"];
+function route(){
+  const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "quiz";
+  VIEWS.forEach(k => document.getElementById("v-"+k).hidden = k !== v);
+  document.querySelectorAll("nav a").forEach(a => a.setAttribute("aria-current", a.getAttribute("href")==="#"+v ? "page" : "false"));
+}
+window.addEventListener("hashchange", route);
+document.getElementById("m-listen").onclick = () => { mode="listen"; store.set("cmt-mode",mode); renderMode(); shown=false; renderCard(); };
+document.getElementById("m-clue").onclick = () => { mode="clue"; store.set("cmt-mode",mode); renderMode(); shown=false; renderCard(); };
+document.getElementById("onlywrong").addEventListener("change", e => { onlyWrong = e.target.checked; syncWrongChip(); newDeck(); });
+document.getElementById("reshuffle").onclick = newDeck;
+document.getElementById("q").addEventListener("input", e => renderSheet(e.target.value));
+
+
+/* ---------- 페이지 안 유튜브 플레이어 (곡 정보는 가림막으로 숨김) ---------- */
+let P = null, pReady = false, curV = null, pendingV = null, pendingPlay = false, ticker = null, touched = false;
+const $ = id => document.getElementById(id);
+const fmt = t => { t = Math.max(0, Math.floor(t)); return Math.floor(t/60) + ":" + String(t%60).padStart(2,"0"); };
+const limit = () => +$("lim").value;
+if(location.protocol === "file:") $("filewarn").hidden = false;
+window.onYouTubeIframeAPIReady = () => {
+  P = new YT.Player("yt", { width:"100%", height:"100%",
+    playerVars:{ controls:0, disablekb:1, fs:0, rel:0, iv_load_policy:3, playsinline:1, modestbranding:1, origin: location.origin },
+    events:{ onReady:() => { pReady = true; window.pReadyFlag = true; P.setVolume(+$("vol").value); if(pendingV){ const v = pendingV; pendingV = null; load(v, pendingPlay); } else cover(); },
+             onStateChange:onState, onError:onErr } });
+};
+function load(v, play){
+  curV = v;
+  if(!pReady){ pendingV = v; pendingPlay = play; cover(); return; }
+  $("perr").hidden = true;
+  play ? P.loadVideoById({videoId:v, startSeconds:0}) : P.cueVideoById({videoId:v, startSeconds:0});
+  progress(0); cover();
+}
+function isOpen(){ return shown; }
+function cover(){
+  const st = pReady && P.getPlayerState ? P.getPlayerState() : -1;
+  const open = isOpen();
+  $("screen").classList.toggle("open", open);
+  $("cover").hidden = open;
+  $("stage").classList.toggle("playing", st === 1);
+  const big = $("cvbig"), sub = $("cvsub");
+  if(!pReady){ big.textContent = "준비 중"; sub.textContent = "플레이어를 불러오는 중입니다"; return; }
+  if(st === 1){ big.textContent = "듣는 중"; sub.textContent = limit() ? `${fmt(limit())}에서 자동으로 멈춥니다` : "끝까지 재생합니다"; }
+  else if(st === 3){ big.textContent = "불러오는 중"; sub.textContent = ""; }
+  else if(stoppedAtLimit){ big.textContent = "시간 끝"; sub.textContent = "답을 적고 '정답 보기'를 누르세요"; }
+  else { big.textContent = "재생 버튼을 누르세요"; sub.textContent = "곡의 처음부터 재생됩니다"; }
+}
+let stoppedAtLimit = false;
+function onState(e){
+  $("pp").textContent = e.data === 1 ? "⏸ 일시정지" : "▶ 재생";
+  clearInterval(ticker);
+  if(e.data === 1){ stoppedAtLimit = false; ticker = setInterval(tick, 250); }
+  cover();
+}
+function tick(){
+  const t = P.getCurrentTime ? P.getCurrentTime() : 0;
+  progress(t);
+  if(limit() && t >= limit() && !isOpen()){ P.pauseVideo(); stoppedAtLimit = true; cover(); }
+}
+function progress(t){
+  const L = limit() || (P && P.getDuration ? P.getDuration() : 0) || 1;
+  $("barfill").style.width = Math.min(100, t / L * 100) + "%";
+  $("tm").textContent = fmt(t) + (limit() ? " / " + fmt(limit()) : "");
+}
+function onErr(e){
+  const c = e.data, el = $("perr");
+  let msg = "이 영상을 재생할 수 없습니다 (오류 " + c + ").";
+  if(c === 101 || c === 150) msg = "이 영상은 다른 사이트에서의 재생이 막혀 있어요.";
+  if(c === 153) msg = "유튜브가 재생을 막았습니다(오류 153). 파일을 직접 열지 말고 웹 주소(https)로 연 페이지에서 사용하세요.";
+  if(c === 100) msg = "영상이 삭제되었거나 비공개입니다.";
+  el.innerHTML = esc(msg) + (curV ? ` <a href="${yt(curV)}" target="_blank" rel="noopener">유튜브에서 듣기 ↗</a> (제목이 보이니 주의)` : "");
+  el.hidden = false;
+}
+function stageFor(i){
+  $("stage").hidden = mode === "clue" && !shown;
+  if(curV !== i.v){
+    stoppedAtLimit = false;
+    if(mode === "clue") load(i.v, false);
+    else load(i.v, touched && $("autonext").checked);
+  } else cover();
+}
+function stageOff(){ if(pReady && P.stopVideo) P.stopVideo(); curV = null; $("stage").hidden = true; }
+function toggle(){
+  if(!pReady || !curV) return;
+  touched = true;
+  const st = P.getPlayerState();
+  if(st === 1) P.pauseVideo();
+  else { if(stoppedAtLimit) P.seekTo(0, true); stoppedAtLimit = false; P.playVideo(); }
+}
+$("pp").onclick = toggle;
+$("rw").onclick = () => { if(!pReady) return; touched = true; stoppedAtLimit = false; P.seekTo(0, true); P.playVideo(); };
+$("b10").onclick = () => { if(!pReady) return; P.seekTo(Math.max(0, P.getCurrentTime() - 10), true); };
+$("f10").onclick = () => { if(!pReady) return; P.seekTo(P.getCurrentTime() + 10, true); };
+$("vol").oninput = e => { if(pReady) P.setVolume(+e.target.value); };
+$("lim").onchange = () => { progress(pReady && P.getCurrentTime ? P.getCurrentTime() : 0); cover(); };
+document.addEventListener("keydown", e => {
+  if(e.code !== "Space" || /INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName) || $("v-quiz").hidden) return;
+  e.preventDefault(); toggle();
+});
+document.addEventListener("click", e => { if(e.target.closest && e.target.closest("#card button")) touched = true; }, true);
+
+renderWeeks(); renderMode(); newDeck(); renderSheet(""); renderCompare(); renderPlaylist(); route();
+</script>
+<script src="https://www.youtube.com/iframe_api" onerror="window.__ytFail=true"></script>
+<script>
+setTimeout(function(){
+  if(window.pReadyFlag) return;
+  var why;
+  if(location.protocol === "file:") why = "파일을 컴퓨터에서 바로 열어서 유튜브가 재생을 막고 있어요. 웹 주소(https://…)로 올린 뒤 열어주세요.";
+  else if(window.__ytFail || typeof YT === "undefined") why = "유튜브 플레이어를 불러오지 못했어요. 채팅창 미리보기나 메일 첨부 미리보기 안에서는 막혀요. 크롬에서 웹 주소로 직접 열어주세요. (광고 차단 확장 프로그램이 막는 경우도 있어요.)";
+  else why = "플레이어가 응답하지 않아요. 새로고침해 보세요.";
+  document.getElementById("cvbig").textContent = "재생할 수 없음";
+  document.getElementById("cvsub").textContent = why;
+}, 8000);
+</script>
+
+</body>
+</html>
